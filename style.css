@@ -1,0 +1,797 @@
+:root {
+  --primary-maroon: #5a1424;
+  --royal-wine: #420d19;
+  --gold-accent: #c49a4f;
+  --gold-bright: #b8860b;
+  --gold-border: rgba(196, 154, 79, 0.45);
+  --ivory-bg: #fcf9f4;
+  --card-parchment: #fdfaf3;
+  --card-shadow: 0 16px 38px rgba(90, 20, 36, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--ivory-bg);
+}
+
+body {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--ivory-bg);
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* --- Freeze Page Scroll Until Envelope Is Opened --- */
+html.scroll-locked,
+body.scroll-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  touch-action: none !important;
+}
+
+body.scroll-locked .feed-container {
+  display: none !important;
+}
+
+body.scroll-locked .swipe-btn {
+  opacity: 0.6;
+}
+
+/* --- Floating Rose Petals & Confetti Canvases --- */
+#rose-petals,
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+#rose-petals { z-index: 90; }
+#confetti-canvas { z-index: 95; }
+
+/* --- Top Sticky Header Navigation Bar --- */
+.top-nav {
+  position: fixed;
+  top: 14px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.monogram-pill {
+  pointer-events: auto;
+  background: rgba(90, 20, 36, 0.94);
+  color: #ffffff;
+  border: 1px solid var(--gold-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 6px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-pill {
+  pointer-events: auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(90, 20, 36, 0.94);
+  color: #ffffff;
+  border: 1px solid var(--gold-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease;
+}
+
+.icon-pill:active {
+  transform: scale(0.92);
+}
+
+/* ==========================================================
+   SCREEN 1: 3D INTERACTIVE BIFOLD ENVELOPE
+========================================================== */
+.envelope-hero-screen {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  padding: 20px 16px;
+  background-color: var(--ivory-bg);
+}
+
+.card-3d-stage {
+  perspective: 1500px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bifold-envelope {
+  position: relative;
+  width: min(88vw, 360px);
+  height: min(44vh, 290px);
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 1.1s cubic-bezier(0.25, 1, 0.35, 1);
+}
+
+.bifold-envelope.is-open {
+  transform: translateY(min(20vh, 140px));
+}
+
+.base-leaf {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, #fffdf8 0%, #f6efe2 100%);
+  border-radius: 18px;
+  border: 2px solid var(--gold-border);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  z-index: 1;
+}
+
+.base-leaf-content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.4s;
+}
+
+.bifold-envelope.is-open .base-leaf-content {
+  opacity: 1;
+}
+
+.save-the-date-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--gold-accent);
+}
+
+.date-large {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem, 3.8vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--primary-maroon);
+  margin-top: 4px;
+}
+
+.gold-flourish {
+  font-size: 0.75rem;
+  color: var(--gold-bright);
+  letter-spacing: 0.2em;
+  margin: 4px 0;
+}
+
+.venue-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  color: var(--royal-wine);
+  font-weight: 600;
+}
+
+.countdown-chip {
+  margin-top: 10px;
+  background: var(--primary-maroon);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 6px 18px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(90, 20, 36, 0.25);
+}
+
+.scroll-prompt-text {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold-accent);
+  font-weight: 600;
+  margin-top: 10px;
+  animation: pulseGentle 2s infinite ease-in-out;
+}
+
+.flap-leaf-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform 1.25s cubic-bezier(0.25, 1, 0.35, 1);
+  z-index: 10;
+}
+
+.bifold-envelope.is-open .flap-leaf-wrapper {
+  transform: rotateX(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid var(--gold-border);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.flap-front {
+  background: radial-gradient(circle at center, #ffffff 0%, #f7f1e6 100%);
+  z-index: 2;
+}
+
+.damask-watermark {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(196, 154, 79, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+}
+
+.invitation-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--gold-accent);
+  margin-bottom: 6px;
+}
+
+.royal-seal-emblem {
+  width: 110px;
+  height: 110px;
+  margin: 4px 0 12px;
+  filter: drop-shadow(0 6px 16px rgba(196, 154, 79, 0.35));
+  transition: transform 0.3s ease;
+}
+
+.bifold-envelope:hover .royal-seal-emblem {
+  transform: scale(1.05);
+}
+
+.seal-graphic {
+  width: 100%;
+  height: 100%;
+}
+
+.tap-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--primary-maroon);
+  border: 1px solid var(--gold-border);
+  padding: 7px 20px;
+  border-radius: 25px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(196, 154, 79, 0.22);
+  animation: pulseGentle 2s infinite ease-in-out;
+}
+
+.finger-icon {
+  font-size: 0.95rem;
+  animation: bounceHand 1.5s infinite;
+}
+
+@keyframes bounceHand {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes pulseGentle {
+  0%, 100% { transform: scale(1); opacity: 0.92; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+
+.flap-back {
+  background: radial-gradient(circle at center, #ffffff 0%, #f6ede0 100%);
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.inside-upper-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.planner-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--primary-maroon);
+  border: 1px solid var(--gold-accent);
+  padding: 2px 14px;
+  border-radius: 20px;
+  background: #ffffff;
+  margin-bottom: 4px;
+}
+
+.shloka-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  letter-spacing: 0.08em;
+}
+
+.request-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--royal-wine);
+  margin-top: 2px;
+}
+
+.bride-groom-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.2rem, 7.5vw, 2.8rem);
+  line-height: 1;
+  color: var(--primary-maroon);
+  margin-top: 4px;
+}
+
+.and-script {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--gold-accent);
+}
+
+.gold-corner {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.gold-corner.tl {
+  top: 8px; left: 8px;
+  border-top: 2px solid var(--gold-bright);
+  border-left: 2px solid var(--gold-bright);
+  border-top-left-radius: 8px;
+}
+.gold-corner.tr {
+  top: 8px; right: 8px;
+  border-top: 2px solid var(--gold-bright);
+  border-right: 2px solid var(--gold-bright);
+  border-top-right-radius: 8px;
+}
+.gold-corner.bl {
+  bottom: 8px; left: 8px;
+  border-bottom: 2px solid var(--gold-bright);
+  border-left: 2px solid var(--gold-bright);
+  border-bottom-left-radius: 8px;
+}
+.gold-corner.br {
+  bottom: 8px; right: 8px;
+  border-bottom: 2px solid var(--gold-bright);
+  border-right: 2px solid var(--gold-bright);
+  border-bottom-right-radius: 8px;
+}
+
+.experience-bar {
+  margin-top: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--gold-border);
+  padding: 7px 22px;
+  border-radius: 25px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--primary-maroon);
+  box-shadow: 0 4px 14px rgba(90, 20, 36, 0.08);
+}
+
+/* ==========================================================
+   SCREEN 2: UNIFIED CARD FEED (ELIMINATES BLEED & ARTIFACTS)
+========================================================== */
+.feed-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 14px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.feed-card-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Uniform Framed Cards */
+.framed-card {
+  position: relative;
+  width: min(88vw, 380px);
+  background: #ffffff;
+  border-radius: 20px;
+  border: 4px solid #ffffff;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Hero Arch Typography Overlay */
+.hero-arch-card {
+  aspect-ratio: 1 / 1.38;
+}
+
+.hero-arch-card .card-photo {
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.hero-arch-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 14% 16px 0;
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    rgba(252, 249, 244, 0) 0%,
+    rgba(252, 249, 244, 0.45) 25%,
+    rgba(252, 249, 244, 0.75) 55%,
+    rgba(252, 249, 244, 0) 85%
+  );
+  pointer-events: none;
+}
+
+.hero-subheading {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--primary-maroon);
+  line-height: 1.15;
+}
+
+.hero-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--gold-accent);
+  margin-top: 4px;
+}
+
+.hero-body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.68rem, 2vw, 0.76rem);
+  color: #5c4f46;
+  max-width: 82%;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.hero-couple-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.2rem, 7vw, 2.9rem);
+  color: var(--primary-maroon);
+  line-height: 1;
+  margin-top: 10px;
+}
+
+.hero-couple-script span {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--gold-accent);
+}
+
+.anim-entry {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: glideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.3s; }
+.delay-2 { animation-delay: 0.6s; }
+
+@keyframes glideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================
+   3D COVERFLOW HORIZONTAL CAROUSEL SECTION
+========================================================== */
+.wardrobe-carousel-section {
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+}
+
+.carousel-header {
+  text-align: center;
+  padding: 0 16px 20px;
+  max-width: 500px;
+}
+
+.carousel-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.75rem, 5vw, 2.3rem);
+  font-weight: 600;
+  color: var(--primary-maroon);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.carousel-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.72rem, 2.2vw, 0.82rem);
+  color: #7a6e65;
+  margin-top: 6px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.coverflow-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: min(72vh, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  overflow: visible;
+}
+
+.coverflow-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Individual Lookbook Cards */
+.coverflow-card {
+  position: absolute;
+  width: min(84vw, 360px);
+  height: 94%;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.35, 1),
+              opacity 0.6s ease,
+              filter 0.6s ease;
+  will-change: transform, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card-inner-box {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 4px solid #ffffff;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lookbook-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* Circular Navigation Arrows */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(90, 20, 36, 0.92);
+  color: #ffffff;
+  border: 1px solid var(--gold-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 40;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.carousel-nav-btn:hover {
+  background: #420d19;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-nav-btn:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.prev-btn {
+  left: max(8px, calc(50% - min(42vw, 180px) - 22px));
+}
+
+.next-btn {
+  right: max(8px, calc(50% - min(42vw, 180px) - 22px));
+}
+
+/* Pagination Dots */
+.carousel-dots {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  gap: 8px;
+  z-index: 30;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(196, 154, 79, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  width: 26px;
+  border-radius: 12px;
+  background: var(--primary-maroon);
+}
+
+/* Fixed Bottom Controls */
+.bottom-controls {
+  position: fixed;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.pill-btn {
+  pointer-events: auto;
+  border: 1px solid var(--gold-border);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 11px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.swipe-btn {
+  background: rgba(90, 20, 36, 0.94);
+  color: #ffffff;
+}
+
+.music-btn {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--primary-maroon);
+}
+
+.pill-btn:active {
+  transform: scale(0.93);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
